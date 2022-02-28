@@ -11,6 +11,7 @@
 		<module>omeka-java-client-classic</module>
 		<module>omeka-java-client-s</module>
 		<module>omeka-java-client-app</module>
+		<module>omeka-java-client-jacoco-report</module>
 	</modules>
 
 	<properties>
@@ -22,6 +23,7 @@
 		<sonar.organization>don-vip</sonar.organization>
 		<sonar.projectKey>don-vip_omeka-java-client</sonar.projectKey>
 		<sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
+		<lang3-version>3.12.0</lang3-version>
 		<collections4-version>4.4</collections4-version>
 		<jsonld-version>0.13.4</jsonld-version>
 		<springboot-version>2.6.4</springboot-version>
@@ -46,6 +48,11 @@
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-collections4</artifactId>
 				<version>${collections4-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${lang3-version}</version>
 			</dependency>
 			<dependency>
 				<groupId>commons-logging</groupId>
@@ -132,6 +139,11 @@
 					<version>3.0.0-M5</version>
 				</plugin>
 				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>0.8.7</version>
+				</plugin>
+				<plugin>
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-maven-plugin</artifactId>
 					<version>${springboot-version}</version>
@@ -155,6 +167,18 @@
 								</requireMavenVersion>
 							</rules>
 						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>coverage-initialize</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>

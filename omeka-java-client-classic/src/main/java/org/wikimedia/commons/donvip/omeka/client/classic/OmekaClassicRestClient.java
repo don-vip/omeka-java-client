@@ -1,7 +1,6 @@
 package org.wikimedia.commons.donvip.omeka.client.classic;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -60,7 +59,7 @@ public class OmekaClassicRestClient {
 		return endpoint;
 	}
 
-	private String fetchJsonContent(CloseableHttpResponse response) throws IOException, UnsupportedEncodingException {
+	private String fetchJsonContent(CloseableHttpResponse response) throws IOException {
 		if (response.getStatusLine().getStatusCode() >= 400) {
 			throw new IOException(response.toString());
 		}
@@ -86,7 +85,8 @@ public class OmekaClassicRestClient {
 
 	@SuppressWarnings("unchecked")
 	public List<OmekaRecord> getRecords(OmekaRecords records) throws IOException {
-		return (List<OmekaRecord>) getValues(records.url().toExternalForm(), records.resource().getResourceClass()).getObjects();
+		return (List<OmekaRecord>) getValues(records.url().toExternalForm(), records.resource().getResourceClass())
+				.getObjects();
 	}
 
 	/**
@@ -112,7 +112,8 @@ public class OmekaClassicRestClient {
 	@SuppressWarnings("unchecked")
 	protected <T extends OmekaRecord> OmekaPage<T> getResources(OmekaResourceType resource, GetParameters params)
 			throws IOException {
-		return (OmekaPage<T>) getValues(String.format("%s/%ss", endpoint, resource.name()), resource.getResourceClass());
+		return (OmekaPage<T>) getValues(String.format("%s/%ss%s", endpoint, resource.name(), params.getQueryString()),
+				resource.getResourceClass());
 	}
 
 	/**
