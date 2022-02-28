@@ -1,0 +1,53 @@
+{
+	"id": 45,
+	"url": "https:\/\/bibliotheque-virtuelle.bu.uca.fr\/api\/collections\/45",
+	"public": true,
+	"featured": false,
+	"added": "2021-11-17T11:16:35+00:00",
+	"modified": "2021-11-18T08:23:47+00:00",
+	"owner": {
+		"id": 1,
+		"url": "https:\/\/bibliotheque-virtuelle.bu.uca.fr\/api\/users\/1",
+		"resource": "users"
+	},
+	"items": {
+		"count": 55,
+		"url": "https:\/\/bibliotheque-virtuelle.bu.uca.fr\/api\/items?collection=45",
+		"resource": "items"
+	},
+	"element_texts": [
+		{
+			"html": false,
+			"text": "Livre d'or de la librairie des Volcans",
+			"element_set": {
+				"id": 1,
+				"url": "https:\/\/bibliotheque-virtuelle.bu.uca.fr\/api\/element_sets\/1",
+				"name": "Dublin Core",
+				"resource": "element_sets"
+			},
+			"element": {
+				"id": 50,
+				"url": "https:\/\/bibliotheque-virtuelle.bu.uca.fr\/api\/elements\/50",
+				"name": "Title",
+				"resource": "elements"
+			}
+		},
+		{
+			"html": false,
+			"text": "https:\/\/bibliotheque-virtuelle.bu.uca.fr\/files\/vignettes\/BUCA_Librairie_les_Volcans_livre_d_or_2_0001.jpg",
+			"element_set": {
+				"id": 1,
+				"url": "https:\/\/bibliotheque-virtuelle.bu.uca.fr\/api\/element_sets\/1",
+				"name": "Dublin Core",
+				"resource": "element_sets"
+			},
+			"element": {
+				"id": 46,
+				"url": "https:\/\/bibliotheque-virtuelle.bu.uca.fr\/api\/elements\/46",
+				"name": "Relation",
+				"resource": "elements"
+			}
+		}
+	],
+	"extended_resources": []
+}
