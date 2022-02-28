@@ -62,6 +62,11 @@
 				<artifactId>wiremock-jre8</artifactId>
 				<version>2.32.0</version>
 			</dependency>
+			<dependency>
+				<groupId>io.soabase.record-builder</groupId>
+				<artifactId>record-builder-processor</artifactId>
+				<version>32</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

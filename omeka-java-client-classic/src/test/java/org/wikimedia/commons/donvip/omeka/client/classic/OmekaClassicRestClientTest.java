@@ -3,6 +3,7 @@ package org.wikimedia.commons.donvip.omeka.client.classic;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.IOException;
@@ -30,15 +31,23 @@ class OmekaClassicRestClientTest {
 	}
 
 	@Test
+	void testGetCollections(WireMockRuntimeInfo wm) throws Exception {
+		stubGet("/api/collections", "/getCollections.json");
+		assertEquals(36, client(wm).getCollections().getObjects().size());
+	}
+
+	@Test
 	void testGetItems(WireMockRuntimeInfo wm) throws Exception {
 		stubGet("/api/items?collection=45", "/getItems.json");
-		assertNotNull(client(wm).getValues(url(wm, "/api/items?collection=45").toExternalForm(), OmekaItem.class));
+		assertEquals(50, client(wm).getValues(url(wm, "/api/items?collection=45").toExternalForm(), OmekaItem.class)
+				.getObjects().size());
 	}
 
 	@Test
 	void testGetFiles(WireMockRuntimeInfo wm) throws Exception {
 		stubGet("/api/files?item=73824", "/getFiles.json");
-		assertNotNull(client(wm).getValues(url(wm, "/api/files?item=73824").toExternalForm(), OmekaFile.class));
+		assertEquals(1, client(wm).getValues(url(wm, "/api/files?item=73824").toExternalForm(), OmekaFile.class)
+				.getObjects().size());
 	}
 
 	private void stubGet(String url, String file) throws IOException {

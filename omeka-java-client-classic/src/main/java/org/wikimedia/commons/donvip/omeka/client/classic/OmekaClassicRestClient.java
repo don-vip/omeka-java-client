@@ -14,6 +14,8 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.wikimedia.commons.donvip.omeka.client.classic.parameters.GetParameters;
+import org.wikimedia.commons.donvip.omeka.client.classic.parameters.GetParametersBuilder;
 import org.wikimedia.commons.donvip.omeka.client.classic.resources.OmekaCollection;
 import org.wikimedia.commons.donvip.omeka.client.classic.resources.OmekaElement;
 import org.wikimedia.commons.donvip.omeka.client.classic.resources.OmekaElementSet;
@@ -33,6 +35,8 @@ public class OmekaClassicRestClient {
 	private final String endpoint;
 
 	private final CloseableHttpClient httpClient;
+
+	private GetParameters defaultGetParameters = GetParametersBuilder.builder().build();
 
 	public OmekaClassicRestClient(URL endpoint) {
 		this(createDefaultObjectMapper(), endpoint);
@@ -71,16 +75,18 @@ public class OmekaClassicRestClient {
 		}
 	}
 
-	protected <T extends OmekaRecord> List<T> getValues(String uri, Class<T> resultClass) throws IOException {
+	protected <T extends OmekaRecord> OmekaPage<T> getValues(String uri, Class<T> resultClass) throws IOException {
 		try (CloseableHttpResponse response = httpClient.execute(new HttpGet(uri))) {
-			return jackson.readValue(fetchJsonContent(response),
+			List<T> list = jackson.readValue(fetchJsonContent(response),
 					jackson.getTypeFactory().constructCollectionType(List.class, resultClass));
+			return new OmekaPage<>(Optional.ofNullable(response.getFirstHeader("Omeka-Total-Results"))
+					.map(h -> Integer.parseInt(h.getValue())).orElse(list.size()), list);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<OmekaRecord> getRecords(OmekaRecords records) throws IOException {
-		return (List<OmekaRecord>) getValues(records.url().toExternalForm(), records.resource().getResourceClass());
+		return (List<OmekaRecord>) getValues(records.url().toExternalForm(), records.resource().getResourceClass()).getObjects();
 	}
 
 	/**
@@ -100,14 +106,13 @@ public class OmekaClassicRestClient {
 	 * Return data about resources (most often records)
 	 *
 	 * @param resource
-	 * @param page
-	 * @param sortField
-	 * @param sortDir
+	 * @param params
 	 * @return
 	 */
-	protected <T extends OmekaRecord> OmekaPage<T> getResources(OmekaResourceType resource, int page, String sortField,
-			OmekaSortDirection sortDir) throws IOException {
-		return null; // TODO
+	@SuppressWarnings("unchecked")
+	protected <T extends OmekaRecord> OmekaPage<T> getResources(OmekaResourceType resource, GetParameters params)
+			throws IOException {
+		return (OmekaPage<T>) getValues(String.format("%s/%ss", endpoint, resource.name()), resource.getResourceClass());
 	}
 
 	/**
@@ -146,9 +151,12 @@ public class OmekaClassicRestClient {
 		return getResource(OmekaResourceType.collection, id);
 	}
 
-	public OmekaPage<OmekaCollection> getCollections(int page, String sortField, OmekaSortDirection sortDir)
-			throws IOException {
-		return getResources(OmekaResourceType.collection, page, sortField, sortDir);
+	public OmekaPage<OmekaCollection> getCollections() throws IOException {
+		return getCollections(defaultGetParameters);
+	}
+
+	public OmekaPage<OmekaCollection> getCollections(GetParameters params) throws IOException {
+		return getResources(OmekaResourceType.collection, params);
 	}
 
 	public void postCollection(OmekaCollection collection) throws IOException {
@@ -169,9 +177,12 @@ public class OmekaClassicRestClient {
 		return getResource(OmekaResourceType.element, id);
 	}
 
-	public OmekaPage<OmekaElement> getElements(int page, String sortField, OmekaSortDirection sortDir)
-			throws IOException {
-		return getResources(OmekaResourceType.element, page, sortField, sortDir);
+	public OmekaPage<OmekaElement> getElements() throws IOException {
+		return getElements(defaultGetParameters);
+	}
+
+	public OmekaPage<OmekaElement> getElements(GetParameters params) throws IOException {
+		return getResources(OmekaResourceType.element, params);
 	}
 
 	public void postElement(OmekaElement element) throws IOException {
@@ -192,9 +203,12 @@ public class OmekaClassicRestClient {
 		return getResource(OmekaResourceType.element_set, id);
 	}
 
-	public OmekaPage<OmekaElementSet> getElementSets(int page, String sortField, OmekaSortDirection sortDir)
-			throws IOException {
-		return getResources(OmekaResourceType.element_set, page, sortField, sortDir);
+	public OmekaPage<OmekaElementSet> getElementSets() throws IOException {
+		return getElementSets(defaultGetParameters);
+	}
+
+	public OmekaPage<OmekaElementSet> getElementSets(GetParameters params) throws IOException {
+		return getResources(OmekaResourceType.element_set, params);
 	}
 
 	public void postElementSet(OmekaElementSet elementSet) throws IOException {
@@ -215,8 +229,12 @@ public class OmekaClassicRestClient {
 		return getResource(OmekaResourceType.file, id);
 	}
 
-	public OmekaPage<OmekaFile> getFiles(int page, String sortField, OmekaSortDirection sortDir) throws IOException {
-		return getResources(OmekaResourceType.file, page, sortField, sortDir);
+	public OmekaPage<OmekaFile> getFiles() throws IOException {
+		return getFiles(defaultGetParameters);
+	}
+
+	public OmekaPage<OmekaFile> getFiles(GetParameters params) throws IOException {
+		return getResources(OmekaResourceType.file, params);
 	}
 
 	public void postFile(OmekaFile file) throws IOException {
@@ -237,8 +255,12 @@ public class OmekaClassicRestClient {
 		return getResource(OmekaResourceType.item, id);
 	}
 
-	public OmekaPage<OmekaItem> getItems(int page, String sortField, OmekaSortDirection sortDir) throws IOException {
-		return getResources(OmekaResourceType.item, page, sortField, sortDir);
+	public OmekaPage<OmekaItem> getItems() throws IOException {
+		return getItems(defaultGetParameters);
+	}
+
+	public OmekaPage<OmekaItem> getItems(GetParameters params) throws IOException {
+		return getResources(OmekaResourceType.item, params);
 	}
 
 	public void postItem(OmekaItem item) throws IOException {
