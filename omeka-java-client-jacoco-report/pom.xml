@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.wikimedia.commons.donvip</groupId>
-		<artifactId>omeka-java-client-parent</artifactId>
+		<artifactId>omeka-java-client</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>omeka-java-client-jacoco-report</artifactId>
