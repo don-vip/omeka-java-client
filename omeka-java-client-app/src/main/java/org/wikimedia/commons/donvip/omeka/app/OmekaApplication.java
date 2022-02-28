@@ -91,8 +91,7 @@ public class OmekaApplication implements ApplicationListener<ApplicationReadyEve
 	}
 
 	private static void exitIfNotTest(ConfigurableApplicationContext applicationContext, int exitCode) {
-		if (Arrays.stream(applicationContext.getEnvironment().getActiveProfiles())
-				.noneMatch(p -> "test".equals(p))) {
+		if (Arrays.stream(applicationContext.getEnvironment().getActiveProfiles()).noneMatch("test"::equals)) {
 			SpringApplication.exit(applicationContext, () -> exitCode);
 		}
 	}

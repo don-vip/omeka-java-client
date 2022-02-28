@@ -9,6 +9,6 @@ import org.springframework.test.context.ActiveProfiles;
 class OmekaApplicationTest {
 
 	@Test
-	public void contextLoads() {
+	void contextLoads() {
 	}
 }
